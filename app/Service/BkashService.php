@@ -1,0 +1,110 @@
+<?php
+
+namespace App\Service;
+
+use Illuminate\Support\Facades\Http;
+
+
+class BkashService
+{
+  protected $baseUrl;
+  protected $appKey;
+  protected $appSecret;
+  protected $username;
+  protected $password;
+
+  public function __construct()
+  {
+    $this->baseUrl = env('BKASH_BASE_URL', 'https://tokenized.sandbox.bka.sh/v1.2.0-beta');
+    $this->appKey = env('BKASH_APP_KEY', 'sandboxAppKey');
+    $this->appSecret = env('BKASH_APP_SECRET', 'sandboxAppSecret');
+    $this->username = env('BKASH_USERNAME', 'sandboxTestUser');
+    $this->password = env('BKASH_PASSWORD', 'sandboxTestPassword');
+  }
+
+  /**
+   * Grant Token
+   */
+  public function grantToken(): array
+  {
+    $url = $this->baseUrl . '/tokenized/checkout/token/grant';
+
+    $payload = [
+      'app_key' => $this->appKey,
+      'app_secret' => $this->appSecret,
+    ];
+
+    $response = Http::withHeaders([
+      'Content-Type' => 'application/json',
+      'username' => $this->username,
+      'password' => $this->password,
+      'x-app-key' => $this->appKey,
+    ])->post($url, $payload);
+
+    return $response->json();
+  }
+
+  /**
+   * Create Payment
+   */
+  public function createPayment(string $token, float|int $amount, string $invoice)
+  {
+    // return $this->appKey;
+    // return $token;
+    $url = 'https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/create';
+
+    $payload = [
+      "mode" => "0011",
+      "payerReference" => "01907641877",
+      "callbackURL" => "http://localhost:8000/bkash/callback", // পরিবর্তন করতে হবে প্রোডাকশন URL
+      "amount" => number_format($amount, 2, '.', ''),
+      "currency" => "BDT",
+      "intent" => "sale",
+      "merchantInvoiceNumber" => $invoice
+    ];
+
+    $response = Http::withHeaders([
+      'Authorization' => $token,
+      'X-APP-Key' => env('BKASH_APP_KEY'),
+      'Accept' => 'application/json',
+    ])->post($url, $payload);
+
+    return $response->json();
+  }
+
+  /**
+   * Execute Payment
+   */
+  public function executePayment(string $token, string $paymentID): array
+  {
+    $url = $this->baseUrl . '/tokenized/checkout/execute';
+
+    $payload = [
+      'paymentID' => $paymentID
+    ];
+
+    $response = Http::withHeaders([
+      'Content-Type' => 'application/json',
+      'Authorization' => $token,
+      'x-app-key' => $this->appKey,
+    ])->post($url, $payload);
+
+    return $response->json();
+  }
+
+  /**
+   * Query Payment
+   */
+  public function queryPayment(string $token, string $paymentID): array
+  {
+    $url = $this->baseUrl . '/tokenized/checkout/payment/status?paymentID=' . $paymentID;
+
+    $response = Http::withHeaders([
+      'Content-Type' => 'application/json',
+      'Authorization' => $token,
+      'x-app-key' => $this->appKey,
+    ])->get($url);
+
+    return $response->json();
+  }
+}

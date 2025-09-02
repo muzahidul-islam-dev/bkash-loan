@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BkashController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceController;
@@ -30,4 +31,7 @@ Route::middleware('AuthCheck')->group(function () {
     });
 });
 
-Route::get('/',[HomeController::class, 'home']);
+Route::get('/', [HomeController::class, 'home']);
+
+Route::post('/bkash/pay', [BkashController::class, 'pay'])->name('bkashPayment');
+Route::post('/bkash/callback', [BkashController::class, 'callback']);

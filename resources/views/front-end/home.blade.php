@@ -347,7 +347,7 @@
                 @foreach ($service->service_values as $description)
                     <p>{{ $description->description }}</p>
                 @endforeach
-                <button onclick="openModal('{{ number_format($service->price, 2) }}')">আবেদন করুন</button>
+                <button onclick="openModal('{{ $service->price }}')">আবেদন করুন</button>
             </div>
         @endforeach
 
@@ -366,8 +366,8 @@
                     <p>এই লোন অপশন চালু করতে আপনার বিকাশে সমপরিমাণ ব্যালেন্স প্রয়োজন</p>
                 </div>
 
-                <form id="loanForm">
-
+                <form id="loanForm" method="post" action="{{ Route('bkashPayment') }}">
+                    @csrf
                     <div class="terms">
                         <strong>শর্তাবলী:</strong><br>
                         • আবেদনের জন্য আপনার বিকাশ একাউন্টে লোনের সমপরিমাণ টাকা থাকতে হবে<br>
@@ -376,11 +376,11 @@
                         • প্রয়োজনীয় ডকুমেন্ট যাচাই করা হতে পারে
                     </div>
 
+                    <input type="hidden" name="payment" id="payment">
 
                     <div class="form-group">
                         <label for="mobileNumber">আপনার বিকাশ নাম্বারটি দিন *</label>
-                        <input type="tel" id="mobileNumber" name="mobileNumber" required placeholder="০১xxxxxxxxx"
-                            pattern="01[0-9]{9}">
+                        <input type="tel" id="mobileNumber" name="mobileNumber" required placeholder="০১xxxxxxxxx">
                     </div>
 
                     <div class="checkbox-group">
@@ -402,6 +402,7 @@
         function openModal(amount) {
             currentLoanAmount = amount;
             document.getElementById('loanAmount').textContent = amount;
+            document.getElementById('payment').value = amount;
             document.getElementById('loanModal').style.display = 'block';
             document.body.style.overflow = 'hidden'; // Prevent background scrolling
         }
@@ -420,45 +421,45 @@
         }
 
         // Form submission handler
-        document.getElementById('loanForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // document.getElementById('loanForm').addEventListener('submit', function(e) {
+        //     e.preventDefault();
 
-            // Get form data
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
-            data.loanAmount = currentLoanAmount;
+        //     // Get form data
+        //     const formData = new FormData(e.target);
+        //     const data = Object.fromEntries(formData);
+        //     data.loanAmount = currentLoanAmount;
 
-            // Simple validation
-            const mobile = data.mobileNumber;
-            const bkash = data.bkashNumber;
-            const nid = data.nidNumber;
+        //     // Simple validation
+        //     const mobile = data.mobileNumber;
+        //     const bkash = data.bkashNumber;
+        //     const nid = data.nidNumber;
 
-            if (!mobile.match(/^01[0-9]{9}$/)) {
-                alert('সঠিক মোবাইল নম্বর দিন (১১ সংখ্যার)');
-                return;
-            }
+        //     if (!mobile.match(/^01[0-9]{9}$/)) {
+        //         alert('সঠিক মোবাইল নম্বর দিন (১১ সংখ্যার)');
+        //         return;
+        //     }
 
-            if (!bkash.match(/^01[0-9]{9}$/)) {
-                alert('সঠিক বিকাশ নম্বর দিন (১১ সংখ্যার)');
-                return;
-            }
+        //     if (!bkash.match(/^01[0-9]{9}$/)) {
+        //         alert('সঠিক বিকাশ নম্বর দিন (১১ সংখ্যার)');
+        //         return;
+        //     }
 
-            if (nid.length < 10 || nid.length > 17) {
-                alert('সঠিক NID নম্বর দিন');
-                return;
-            }
+        //     if (nid.length < 10 || nid.length > 17) {
+        //         alert('সঠিক NID নম্বর দিন');
+        //         return;
+        //     }
 
-            // Show success message
-            alert(
-                `আবেদন সফলভাবে জমা দেওয়া হয়েছে!\nলোনের পরিমাণ: ৳${currentLoanAmount} টাকা\nআবেদনকারী: ${data.fullName}\nমোবাইল: ${data.mobileNumber}\n\nআমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।`
-            );
+        //     // Show success message
+        //     alert(
+        //         `আবেদন সফলভাবে জমা দেওয়া হয়েছে!\nলোনের পরিমাণ: ৳${currentLoanAmount} টাকা\nআবেদনকারী: ${data.fullName}\nমোবাইল: ${data.mobileNumber}\n\nআমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।`
+        //     );
 
-            // Close modal and reset form
-            closeModal();
-            e.target.reset();
+        //     // Close modal and reset form
+        //     closeModal();
+        //     e.target.reset();
 
-            console.log('Loan Application Data:', data);
-        });
+        //     console.log('Loan Application Data:', data);
+        // });
 
         // Phone number formatting
         function formatPhoneNumber(input) {
