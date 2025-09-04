@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BkashController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,10 +29,16 @@ Route::middleware('AuthCheck')->group(function () {
                 Route::get('/delete/{id}', [ServiceController::class, 'delete'])->name('delete');
             });
         });
+
+        Route::get('/payment-configuration', [PaymentController::class, 'paymentConfigure'])->name('payment.configuration');
+        Route::post('/payment-configuration-save', [PaymentController::class, 'paymentConfigureSave'])->name('payment.save');
     });
 });
 
 Route::get('/', [HomeController::class, 'home']);
 
+
+
 Route::post('/bkash/pay', [BkashController::class, 'pay'])->name('bkashPayment');
-Route::post('/bkash/callback', [BkashController::class, 'callback']);
+Route::get('/success', [BkashController::class, 'callback'])->name('callback');
+

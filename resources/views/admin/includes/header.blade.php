@@ -3,23 +3,6 @@
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box text-center">
-                <a href="index.html" class="logo logo-dark">
-                    <span class="logo-sm">
-                        <img src="{{ asset('/') }}assets/images/logo-sm.png" alt="logo-sm-dark" height="22">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="{{ asset('/') }}assets/images/logo-dark.png" alt="logo-dark" height="24">
-                    </span>
-                </a>
-
-                <a href="index.html" class="logo logo-light">
-                    <span class="logo-sm">
-                        <img src="{{ asset('/') }}assets/images/logo-sm.png" alt="logo-sm-light" height="22">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="{{ asset('/') }}assets/images/logo-light.png" alt="logo-light" height="24">
-                    </span>
-                </a>
             </div>
 
             <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn">

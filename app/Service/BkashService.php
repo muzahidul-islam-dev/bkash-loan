@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Models\PaymentConfigure;
 use Illuminate\Support\Facades\Http;
 
 
@@ -15,11 +16,11 @@ class BkashService
 
   public function __construct()
   {
-    $this->baseUrl = env('BKASH_BASE_URL', 'https://tokenized.sandbox.bka.sh/v1.2.0-beta');
-    $this->appKey = env('BKASH_APP_KEY', 'sandboxAppKey');
-    $this->appSecret = env('BKASH_APP_SECRET', 'sandboxAppSecret');
-    $this->username = env('BKASH_USERNAME', 'sandboxTestUser');
-    $this->password = env('BKASH_PASSWORD', 'sandboxTestPassword');
+    $this->baseUrl = env('BKASH_BASE_URL', 'https://tokenized.pay.bka.sh/v1.2.0-beta');
+    $this->appKey = PaymentConfigure::first()?->app_key;
+    $this->appSecret = PaymentConfigure::first()?->secret_key;
+    $this->username = PaymentConfigure::first()?->username;
+    $this->password = PaymentConfigure::first()?->password;
   }
 
   /**
@@ -47,16 +48,15 @@ class BkashService
   /**
    * Create Payment
    */
-  public function createPayment(string $token, float|int $amount, string $invoice)
+  public function createPayment(string $token, float|int $amount, string $invoice, $mobileNumber = null)
   {
-    // return $this->appKey;
-    // return $token;
-    $url = 'https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/create';
+
+    $url = $this->baseUrl . '/tokenized/checkout/create';
 
     $payload = [
       "mode" => "0011",
-      "payerReference" => "01907641877",
-      "callbackURL" => "http://localhost:8000/bkash/callback", // পরিবর্তন করতে হবে প্রোডাকশন URL
+      "payerReference" => $mobileNumber,
+      "callbackURL" => "https://google.com",
       "amount" => number_format($amount, 2, '.', ''),
       "currency" => "BDT",
       "intent" => "sale",
@@ -65,7 +65,7 @@ class BkashService
 
     $response = Http::withHeaders([
       'Authorization' => $token,
-      'X-APP-Key' => env('BKASH_APP_KEY'),
+      'X-APP-Key' => $this->appKey,
       'Accept' => 'application/json',
     ])->post($url, $payload);
 
