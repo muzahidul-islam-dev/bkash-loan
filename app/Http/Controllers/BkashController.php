@@ -20,7 +20,6 @@ class BkashController extends Controller
      */
     public function pay(Request $request)
     {
-
         // Step 1: Get token
         $tokenData = $this->bkash->grantToken();
         $token = $tokenData['id_token'] ?? null;
