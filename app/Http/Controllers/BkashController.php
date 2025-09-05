@@ -55,8 +55,9 @@ class BkashController extends Controller
 
         // Step 2: Execute payment
         $executeData = $this->bkash->executePayment($token, $paymentID);
-
-        return $executeData;
+        if ($executeData['statusCode'] == '2056') {
+            return redirect('/');
+        }
         return view('front-end.success');
     }
 

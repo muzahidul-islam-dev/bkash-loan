@@ -56,7 +56,7 @@ class BkashService
     $payload = [
       "mode" => "0011",
       "payerReference" => $mobileNumber,
-      "callbackURL" => route('callback'),
+      "callbackURL" => route('success'),
       "amount" => number_format($amount, 2, '.', ''),
       "currency" => "BDT",
       "intent" => "sale",
