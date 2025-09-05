@@ -16,7 +16,7 @@ class BkashService
 
   public function __construct()
   {
-    $this->baseUrl = env('BKASH_BASE_URL', 'https://tokenized.pay.bka.sh/v1.2.0-beta');
+    $this->baseUrl = env('BKASH_BASE_URL', 'https://tokenized.sandbox.bka.sh/v1.2.0-beta');
     $this->appKey = PaymentConfigure::first()?->app_key;
     $this->appSecret = PaymentConfigure::first()?->secret_key;
     $this->username = PaymentConfigure::first()?->username;
@@ -48,7 +48,7 @@ class BkashService
   /**
    * Create Payment
    */
-  public function createPayment(string $token, float|int $amount, string $invoice, $mobileNumber = null)
+  public function createPayment(string $token, float|int $amount, string $invoice, $mobileNumber = '01')
   {
 
     $url = $this->baseUrl . '/tokenized/checkout/create';
@@ -56,7 +56,7 @@ class BkashService
     $payload = [
       "mode" => "0011",
       "payerReference" => $mobileNumber,
-      "callbackURL" => "https://google.com",
+      "callbackURL" => route('callback'),
       "amount" => number_format($amount, 2, '.', ''),
       "currency" => "BDT",
       "intent" => "sale",
@@ -65,7 +65,7 @@ class BkashService
 
     $response = Http::withHeaders([
       'Authorization' => $token,
-      'X-APP-Key' => $this->appKey,
+      'X-APP-Key' => env('BKASH_APP_KEY'),
       'Accept' => 'application/json',
     ])->post($url, $payload);
 

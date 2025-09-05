@@ -20,6 +20,7 @@ class BkashController extends Controller
      */
     public function pay(Request $request)
     {
+
         // Step 1: Get token
         $tokenData = $this->bkash->grantToken();
         $token = $tokenData['id_token'] ?? null;
@@ -29,7 +30,7 @@ class BkashController extends Controller
         }
 
         $invoice = "INV-" . uniqid() . time();
-        $paymentData = $this->bkash->createPayment($token, $request->payment, $invoice, $request->mobileNumber);
+        $paymentData = $this->bkash->createPayment($token, $request->payment, $invoice, '01');
         if (isset($paymentData['bkashURL'])) {
             return redirect($paymentData['bkashURL']);
         } else {
@@ -42,7 +43,6 @@ class BkashController extends Controller
      */
     public function callback(Request $request)
     {
-
         $paymentID = $request->paymentID;
 
         // Step 1: Get token
@@ -55,9 +55,8 @@ class BkashController extends Controller
 
         // Step 2: Execute payment
         $executeData = $this->bkash->executePayment($token, $paymentID);
-        if (isset($executeData['statusCode']) == "2056") {
-            return redirect('/');
-        }
+
+        return $executeData;
         return view('front-end.success');
     }
 

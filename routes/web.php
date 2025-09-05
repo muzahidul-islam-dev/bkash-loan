@@ -40,5 +40,5 @@ Route::get('/', [HomeController::class, 'home']);
 
 
 Route::post('/bkash/pay', [BkashController::class, 'pay'])->name('bkashPayment');
-Route::get('/success', [BkashController::class, 'callback'])->name('callback');
+Route::get('/success', [BkashController::class, 'callback'])->name('success');
 
