@@ -65,7 +65,7 @@ class BkashService
 
     $response = Http::withHeaders([
       'Authorization' => $token,
-      'X-APP-Key' => env('BKASH_APP_KEY'),
+      'X-APP-Key' => $this->appKey,
       'Accept' => 'application/json',
     ])->post($url, $payload);
 
