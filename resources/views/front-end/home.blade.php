@@ -347,7 +347,7 @@
                 @foreach ($service->service_values as $description)
                     <p>{{ $description->description }}</p>
                 @endforeach
-                <button onclick="openModal('{{ $service->price }}')">আবেদন করুন</button>
+                <button onclick="openModal('{{ $service->price }}','{{ $service->id }}')">আবেদন করুন</button>
             </div>
         @endforeach
 
@@ -366,7 +366,9 @@
                     <p>এই লোন অপশন চালু করতে আপনার বিকাশে সমপরিমাণ ব্যালেন্স প্রয়োজন</p>
                 </div>
 
-                <form id="loanForm" method="post" action="{{ Route('bkashPayment') }}">
+                {{--<form id="loanForm" method="post" action="{{ Route('bkashPayment') }}"> --}}
+
+                <form id="loanForm" method="post" action="{{ Route('payment.request.paymentRequest') }}">
                     @csrf
                     <div class="terms">
                         <strong>শর্তাবলী:</strong><br>
@@ -377,6 +379,7 @@
                     </div>
 
                     <input type="hidden" name="payment" id="payment">
+                    <input type="hidden" name="service_id" id="service_id">
 
                     <div class="form-group">
                         <label for="mobileNumber">আপনার বিকাশ নাম্বারটি দিন *</label>
@@ -399,11 +402,12 @@
     <script>
         let currentLoanAmount = '';
 
-        function openModal(amount) {
+        function openModal(amount,id) {
             currentLoanAmount = amount;
             document.getElementById('loanAmount').textContent = amount;
             document.getElementById('payment').value = amount;
             document.getElementById('loanModal').style.display = 'block';
+            document.getElementById('service_id').value = id;
             document.body.style.overflow = 'hidden'; // Prevent background scrolling
         }
 

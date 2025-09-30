@@ -5,6 +5,7 @@ use App\Http\Controllers\BkashController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PaymentRequestController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,8 +36,9 @@ Route::middleware('AuthCheck')->group(function () {
     });
 
 
-    Route::prefix('payment/request')->name('payment.request')->group(function(){
-        Route::get('all',[])->name('all');
+    Route::prefix('payment/request')->name('payment.request.')->group(function(){
+        Route::post('', [PaymentRequestController::class,'paymentRequest'])->name('paymentRequest');
+        Route::get('all',[PaymentRequestController::class, 'all'])->name('all');
     });
 });
 
