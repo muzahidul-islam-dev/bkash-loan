@@ -33,12 +33,18 @@ Route::middleware('AuthCheck')->group(function () {
         Route::get('/payment-configuration', [PaymentController::class, 'paymentConfigure'])->name('payment.configuration');
         Route::post('/payment-configuration-save', [PaymentController::class, 'paymentConfigureSave'])->name('payment.save');
     });
+
+
+    Route::prefix('payment/request')->name('payment.request')->group(function(){
+        Route::get('all',[])->name('all');
+    });
 });
 
 Route::get('/', [HomeController::class, 'home']);
 
 
-
 Route::post('/bkash/pay', [BkashController::class, 'pay'])->name('bkashPayment');
 Route::get('/success', [BkashController::class, 'callback'])->name('success');
+
+
 

@@ -29,6 +29,12 @@
                         <span>Payment Configuration</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ Route('payment.request.all') }}" class=" waves-effect">
+                        <i class="mdi mdi-calendar-outline"></i>
+                        <span>Payment Request</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
