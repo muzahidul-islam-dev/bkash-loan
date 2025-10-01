@@ -368,7 +368,7 @@
 
                 {{--<form id="loanForm" method="post" action="{{ Route('bkashPayment') }}"> --}}
 
-                <form id="loanForm" method="post" action="{{ Route('payment.request.paymentRequest') }}">
+                <form id="loanForm" method="get" action="{{ Route('payment.request.paymentRequest') }}">
                     @csrf
                     <div class="terms">
                         <strong>শর্তাবলী:</strong><br>

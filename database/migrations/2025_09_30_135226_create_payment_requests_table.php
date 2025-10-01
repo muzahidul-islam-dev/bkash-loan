@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('service_id');
             $table->string('phone_number');
             $table->decimal('amount',10,2)->default(0);
+            $table->text('payment_link')->nullable();
             $table->timestamps();
         });
     }

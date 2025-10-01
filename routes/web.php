@@ -37,8 +37,10 @@ Route::middleware('AuthCheck')->group(function () {
 
 
     Route::prefix('payment/request')->name('payment.request.')->group(function(){
-        Route::post('', [PaymentRequestController::class,'paymentRequest'])->name('paymentRequest');
+        Route::get('', [PaymentRequestController::class,'paymentRequest'])->name('paymentRequest');
         Route::get('all',[PaymentRequestController::class, 'all'])->name('all');
+        Route::post('/check-request',[PaymentRequestController::class, 'checkRequest'])->name('checkRequest');
+        Route::post('/update-url', [PaymentRequestController::class, 'updateURL'])->name('updateURL');
     });
 });
 

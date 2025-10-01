@@ -34,4 +34,5 @@ class PaymentController extends Controller
         return back();
 
     }
+
 }
