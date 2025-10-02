@@ -98,7 +98,9 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }
                 }).then(response => {
-                    myModal.close();
+                    setTimeout(() => {
+                        window.location.reload()
+                    },1000)
                 });
             }
         </script>
