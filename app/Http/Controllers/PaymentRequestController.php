@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PaymentRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PaymentRequestController extends Controller
@@ -10,6 +11,7 @@ class PaymentRequestController extends Controller
     public function all()
     {
         $paymentRequests = PaymentRequest::with('service')->get();
+        PaymentRequest::where('created_at', '<', Carbon::now()->subSeconds(500))->delete();
         return view('admin.pages.payment-request.all', compact('paymentRequests'));
     }
 
